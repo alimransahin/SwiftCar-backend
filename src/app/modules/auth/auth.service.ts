@@ -26,6 +26,7 @@ const signIn = async (payload: TUser): Promise<any> => {
     throw new AppError(httpStatus.CONFLICT, "Password Not Matched");
   }
   const jwtPayload = {
+    name: user.name,
     email: user.email,
     role: user.role,
   };
