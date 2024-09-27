@@ -15,4 +15,11 @@ const signInUser = async (payload: any) => {
   const result = await User.create(payload);
   return result;
 };
-export const userService = { createUserIntoDB, signInUser };
+const updateUser = async (email: string, payload: Partial<TUser>) => {
+  const result = await User.findByIdAndUpdate({ email: email }, payload, {
+    new: true,
+  });
+  return result;
+};
+
+export const userService = { createUserIntoDB, signInUser, updateUser };

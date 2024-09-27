@@ -13,4 +13,8 @@ router.post(
   "/signin",
   validateRequest(userValidation.signInUserValidationSchema)
 );
+router.get(
+  "/:email",
+  validateRequest(userValidation.signInUserValidationSchema)
+);
 export const UserRoutes = router;
