@@ -9,12 +9,15 @@ router.post(
   validateRequest(userValidation.createUserValidationSchema),
   UserController.createUser
 );
-router.post(
-  "/signin",
-  validateRequest(userValidation.signInUserValidationSchema)
+// router.post(
+//   "/signin",
+//   validateRequest(userValidation.signInUserValidationSchema)
+// );
+router.get("/all-user", UserController.getAllUser);
+router.put(
+  "/update-profile/:id",
+  validateRequest(userValidation.updateUserValidationSchema),
+  UserController.updateUser
 );
-router.get(
-  "/:email",
-  validateRequest(userValidation.signInUserValidationSchema)
-);
+router.get("/:email", UserController.getUserProfile);
 export const UserRoutes = router;
