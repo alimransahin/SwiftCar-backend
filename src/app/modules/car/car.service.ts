@@ -45,8 +45,8 @@ const returnCarUpdateIntoDB = async (payload: any) => {
     throw new AppError(httpStatus.NOT_FOUND, "Car details not found");
   }
 
-  const startTime = allBook.startTime;
-  const endTime = payload.endTime;
+  const startTime = allBook.pickUpTime;
+  const endTime = payload.dropOffTime;
 
   if (!startTime || !endTime) {
     throw new AppError(
@@ -66,7 +66,7 @@ const returnCarUpdateIntoDB = async (payload: any) => {
   const pricePerHour = allBook.carId.pricePerHour;
   const totalCost = duration * pricePerHour;
 
-  allBook.endTime = endTime;
+  allBook.dropOffTime = endTime;
   allBook.totalCost = totalCost;
   allBook.carId.status = "available";
   const updatedBook = await allBook.save();

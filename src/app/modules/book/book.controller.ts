@@ -9,7 +9,6 @@ import { Car } from "../car/car.model";
 import AppError from "../../errors/AppError";
 
 const createBook = catchAsync(async (req, res) => {
-  // check car status
   const car = await Car.findOne({ _id: req.body.carId });
   if (car?.status === "unavailable") {
     throw new AppError(

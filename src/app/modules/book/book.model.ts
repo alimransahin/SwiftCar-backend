@@ -5,11 +5,11 @@ const bookSchema = new Schema<TBook>(
   {
     userId: { type: Schema.Types.ObjectId, ref: "user", required: true },
     carId: { type: Schema.Types.ObjectId, ref: "car", required: true },
-    date: {
+    pickUpDate: {
       type: Date,
       required: true,
     },
-    startTime: {
+    pickUpTime: {
       type: String,
       required: true,
       validate: {
@@ -20,22 +20,37 @@ const bookSchema = new Schema<TBook>(
           `${props.value} is not a valid time format! Use HH:MM.`,
       },
     },
-    endTime: {
+    dropOffDate: {
+      type: Date,
+      required: true,
+    },
+    dropOffTime: {
       type: String,
-      default: null,
+      required: true,
       validate: {
-        validator: function (value: string | null) {
-          return (
-            value === null || /^([0-1][0-9]|2[0-3]):([0-5][0-9])$/.test(value)
-          );
+        validator: function (value: string) {
+          return /^([0-1][0-9]|2[0-3]):([0-5][0-9])$/.test(value);
         },
         message: (props) =>
           `${props.value} is not a valid time format! Use HH:MM.`,
       },
     },
+    status: {
+      type: String,
+      enum: ["Pending", "Approved", "Done"],
+      default: "Pending",
+    },
     totalCost: {
       type: Number,
       default: 0,
+    },
+    isReturn: {
+      type: Boolean,
+      default: false,
+    },
+    isPaid: {
+      type: Boolean,
+      default: false,
     },
   },
   { timestamps: true, versionKey: false }
