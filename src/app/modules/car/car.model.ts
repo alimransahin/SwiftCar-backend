@@ -23,7 +23,6 @@ const carSchema = new Schema<TCar>(
       type: [String],
       required: true,
     },
-
     pricePerHour: {
       type: Number,
       required: true,
@@ -33,10 +32,12 @@ const carSchema = new Schema<TCar>(
       enum: ["available", "unavailable"],
       default: "available",
     },
-
     isDeleted: {
       type: Boolean,
       default: false,
+    },
+    image: {
+      type: String,
     },
   },
   { timestamps: true, versionKey: false }
@@ -60,4 +61,3 @@ carSchema.pre("findOneAndDelete", async function (next) {
 });
 
 export const Car = model<TCar>("car", carSchema);
-// export const UserSignIn = model<TUserSignIn>("user", userSignInSchema);

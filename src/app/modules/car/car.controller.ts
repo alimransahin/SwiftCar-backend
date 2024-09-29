@@ -5,7 +5,7 @@ import { carService } from "./car.service";
 
 const createCar = catchAsync(async (req, res) => {
   const carData = req.body;
-
+  console.log(carData);
   const result = await carService.createCarIntoDB(carData);
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
@@ -68,9 +68,9 @@ const updateCar = catchAsync(async (req, res) => {
   });
 });
 const deleteCar = catchAsync(async (req, res) => {
-  const result = await carService.deleteCarFromDB(req.params._id);
+  const result = await carService.deleteCarFromDB(req.params.id);
+
   if (!result || (Array.isArray(result) && result.length === 0)) {
-    // If no data is found, send this response
     return sendResponse(res, {
       statusCode: httpStatus.NOT_FOUND,
       success: false,

@@ -26,7 +26,9 @@ const deleteCarFromDB = async (id: string) => {
   const deleteInfo = {
     isDeleted: true,
   };
-  const result = await Car.findOneAndUpdate({ id }, deleteInfo, { new: true });
+  const result = await Car.findOneAndUpdate({ _id: id }, deleteInfo, {
+    new: true,
+  });
   return result;
 };
 
