@@ -3,6 +3,7 @@ import AppError from "../../errors/AppError";
 import { TBook } from "./book.interface";
 import { Book } from "./book.model";
 import { User } from "../user/user.model";
+import { initialPayment } from "../payment/payment.utils";
 
 const createBookIntoDb = async (payload: TBook) => {
   const newBook = await (
@@ -13,8 +14,19 @@ const createBookIntoDb = async (payload: TBook) => {
     throw new AppError(httpStatus.NOT_FOUND, "Car details not found");
   }
   newBook.carId.status = "unavailable";
+
   await newBook.carId.save();
-  return newBook;
+  const transactionId = `txn-${Date.now()}`;
+  const paymentData = {
+    transactionId,
+    amount: 20,
+    customerName: "Imran",
+    customerEmail: "email@gmail.com",
+    customerPhone: "2506",
+    customerAddress: "House B-158 Road 22",
+  };
+  const paymentSession = await initialPayment(paymentData);
+  return paymentSession;
 };
 const getAllBookFromDB = async () => {
   const result = await Book.find().populate("userId").populate("carId");
