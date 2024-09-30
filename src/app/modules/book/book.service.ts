@@ -4,6 +4,7 @@ import { TBook } from "./book.interface";
 import { Book } from "./book.model";
 import { User } from "../user/user.model";
 import { initialPayment } from "../payment/payment.utils";
+import { TUser } from "../user/user.interface";
 
 const createBookIntoDb = async (payload: TBook) => {
   const newBook = await (
@@ -14,19 +15,8 @@ const createBookIntoDb = async (payload: TBook) => {
     throw new AppError(httpStatus.NOT_FOUND, "Car details not found");
   }
   newBook.carId.status = "unavailable";
-
   await newBook.carId.save();
-  const transactionId = `txn-${Date.now()}`;
-  const paymentData = {
-    transactionId,
-    amount: 20,
-    customerName: "Imran",
-    customerEmail: "email@gmail.com",
-    customerPhone: "2506",
-    customerAddress: "House B-158 Road 22",
-  };
-  const paymentSession = await initialPayment(paymentData);
-  return paymentSession;
+  return newBook;
 };
 const getAllBookFromDB = async () => {
   const result = await Book.find().populate("userId").populate("carId");
@@ -49,9 +39,39 @@ const getSingleBookFromDB = async (userId: any) => {
     .populate("carId");
   return result;
 };
+
+const makePayment = async (res: any) => {
+  const bookingId = res.params.id;
+  const result = await Book.findById(bookingId).populate("userId");
+  if (!result) {
+    throw new AppError(httpStatus.NOT_FOUND, "Booking not found");
+  }
+
+  const transactionId = `txn-${Date.now()}`;
+  const paymentData = {
+    success_url: res.body.currentPageLink,
+    fail_url: res.body.currentPageLink,
+    cancel_url: res.body.currentPageLink,
+    transactionId,
+    amount: result?.totalCost || 10,
+    customerName: (result?.userId as TUser)?.name,
+    customerEmail: (result?.userId as TUser)?.email,
+    customerPhone: (result?.userId as TUser)?.phone,
+    customerAddress: (result?.userId as TUser)?.address,
+  };
+
+  const paymentSession = await initialPayment(paymentData);
+
+  result.status = "Done";
+  result.isPaid = true;
+  await result.save();
+  return paymentSession;
+};
+
 export const bookService = {
   createBookIntoDb,
   getAllBookFromDB,
   getAllBookFromDBByUser,
   getSingleBookFromDB,
+  makePayment,
 };

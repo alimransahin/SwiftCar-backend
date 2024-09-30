@@ -17,4 +17,9 @@ router.get(
   auth(user_role.user),
   bookController.getAllBookByUser
 );
+router.post(
+  "/:id",
+  // auth(user_role.user),
+  bookController.makePayment
+);
 export const BookRouter = router;

@@ -5,7 +5,6 @@ import { carService } from "./car.service";
 
 const createCar = catchAsync(async (req, res) => {
   const carData = req.body;
-  console.log(carData);
   const result = await carService.createCarIntoDB(carData);
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
