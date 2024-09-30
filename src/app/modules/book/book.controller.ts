@@ -90,7 +90,6 @@ const makePayment = catchAsync(async (req, res) => {
   });
 });
 const bookingApprove = catchAsync(async (req, res) => {
-  console.log(req.body);
   const result = await bookService.bookingStatusUpdate(req);
   sendResponse(res, {
     statusCode: httpStatus.OK,

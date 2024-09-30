@@ -33,7 +33,7 @@ const deleteCarFromDB = async (id: string) => {
 };
 
 const returnCarUpdateIntoDB = async (payload: any) => {
-  const bookingId = payload.bookingId;
+  const bookingId = payload.id;
 
   const allBook = await Book.findById(bookingId)
     .populate<{ carId: any }>("carId")
@@ -47,30 +47,59 @@ const returnCarUpdateIntoDB = async (payload: any) => {
     throw new AppError(httpStatus.NOT_FOUND, "Car details not found");
   }
 
-  const startTime = allBook.pickUpTime;
-  const endTime = payload.dropOffTime;
+  const pickUpDate: Date = allBook.pickUpDate;
+  const pickUpTime: string = allBook.pickUpTime;
+  const dropOffDate: Date = allBook.dropOffDate;
+  const dropOffTime: string = allBook.dropOffTime;
 
-  if (!startTime || !endTime) {
+  if (!pickUpDate || !pickUpTime || !dropOffDate || !dropOffTime) {
     throw new AppError(
       httpStatus.BAD_REQUEST,
-      "Start time or end time is missing"
+      "Pick-up or drop-off date and time are missing"
     );
   }
 
+  // Combine date and time into a Date object
+  const combineDateTime = (date: Date, time: string): Date => {
+    const [hours, minutes] = time.split(":").map(Number);
+    const dateTime = new Date(date); // Copy the original date
+    dateTime.setHours(hours, minutes, 0, 0); // Set the hours and minutes
+    return dateTime;
+  };
+
+  // Function to calculate time difference in hours
+  const calculateTimeDifferenceInHours = (
+    pickUpDate: Date,
+    pickUpTime: string,
+    dropOffDate: Date,
+    dropOffTime: string
+  ): number => {
+    const pickUpDateTime = combineDateTime(pickUpDate, pickUpTime);
+    const dropOffDateTime = combineDateTime(dropOffDate, dropOffTime);
+
+    const timeDifferenceInMs =
+      dropOffDateTime.getTime() - pickUpDateTime.getTime();
+    return timeDifferenceInMs / (1000 * 60 * 60); // Convert milliseconds to hours
+  };
+
+  // Helper function to convert time string to hours
   const convertToHours = (time: string) => {
     const [hours, minutes] = time.split(":").map(Number);
     return hours + minutes / 60;
   };
 
-  const startHour = convertToHours(startTime);
-  const endHour = convertToHours(endTime);
-  const duration = endHour - startHour;
-  const pricePerHour = allBook.carId.pricePerHour;
-  const totalCost = duration * pricePerHour;
-
-  allBook.dropOffTime = endTime;
+  // Calculate the total time in hours between pick-up and drop-off
+  const totalTimeInHours = calculateTimeDifferenceInHours(
+    pickUpDate,
+    pickUpTime,
+    dropOffDate,
+    dropOffTime
+  );
+  const totalCost = totalTimeInHours * allBook.carId.pricePerHour;
+  console.log(totalCost, totalTimeInHours, allBook.carId.pricePerHour);
   allBook.totalCost = totalCost;
-  allBook.carId.status = "available";
+  allBook.carId.status = "available"; // Update car status
+  allBook.isReturn = true;
   const updatedBook = await allBook.save();
 
   return updatedBook;

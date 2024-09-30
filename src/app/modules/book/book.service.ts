@@ -74,14 +74,11 @@ const bookingStatusUpdate = async (res: any) => {
   if (!result) {
     throw new AppError(httpStatus.NOT_FOUND, "Booking not found");
   }
-  console.log(status);
-  console.log(result);
   if (status == "approve") {
     result.status = "Approved";
   } else {
     result.status = "Cancled";
   }
-
   await result.save();
   return result;
 };
