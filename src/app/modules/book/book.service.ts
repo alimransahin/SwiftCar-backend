@@ -67,11 +67,25 @@ const makePayment = async (res: any) => {
   await result.save();
   return paymentSession;
 };
+const bookingStatusUpdate = async (res: any) => {
+  const bookingId = res.params.id;
+  const status = res.body.data;
+  const result = await Book.findById(bookingId).populate("userId");
+  if (!result) {
+    throw new AppError(httpStatus.NOT_FOUND, "Booking not found");
+  }
+  console.log(status);
+  // result.status = "Done";
+  // result.isPaid = true;
+  // await result.save();
+  // return paymentSession;
+};
 
 export const bookService = {
   createBookIntoDb,
   getAllBookFromDB,
   getAllBookFromDBByUser,
   getSingleBookFromDB,
+  bookingStatusUpdate,
   makePayment,
 };

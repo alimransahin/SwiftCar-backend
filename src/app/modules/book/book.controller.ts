@@ -89,10 +89,20 @@ const makePayment = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const bookingApprove = catchAsync(async (req, res) => {
+  const result = await bookService.makePayment(req);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "book status updated",
+    data: result,
+  });
+});
 
 export const bookController = {
   createBook,
   getAllBook,
   getAllBookByUser,
   makePayment,
+  bookingApprove,
 };
