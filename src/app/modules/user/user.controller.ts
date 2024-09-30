@@ -68,9 +68,19 @@ const getAllUser = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const userRoleUpdate = catchAsync(async (req, res) => {
+  const result = await userService.roleUpdate(req);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "book status updated",
+    data: result,
+  });
+});
 export const UserController = {
   createUser,
   updateUser,
   getAllUser,
   getUserProfile,
+  userRoleUpdate,
 };

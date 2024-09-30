@@ -96,7 +96,6 @@ const returnCarUpdateIntoDB = async (payload: any) => {
     dropOffTime
   );
   const totalCost = totalTimeInHours * allBook.carId.pricePerHour;
-  console.log(totalCost, totalTimeInHours, allBook.carId.pricePerHour);
   allBook.totalCost = totalCost;
   allBook.carId.status = "available"; // Update car status
   allBook.isReturn = true;

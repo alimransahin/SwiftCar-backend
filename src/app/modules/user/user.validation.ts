@@ -16,6 +16,7 @@ const createUserValidationSchema = z.object({
   phone: z.string().min(6, { message: "Phone must be at least 6 digits" }),
   address: z.string().min(1, { message: "Address is required" }),
   isDeleted: z.boolean().optional(),
+  isBlock: z.boolean().optional(),
 });
 const updateUserValidationSchema = z.object({
   name: z.string().optional(),
@@ -30,6 +31,7 @@ const updateUserValidationSchema = z.object({
   phone: z.string().optional(),
   address: z.string().optional(),
   isDeleted: z.boolean().optional(),
+  isBlock: z.boolean().optional(),
 });
 const signInUserValidationSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),

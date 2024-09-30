@@ -9,4 +9,5 @@ export type TUser = {
   phone: string;
   address: string;
   isDeleted: boolean;
+  isBlock: boolean;
 };
