@@ -37,7 +37,7 @@ const bookSchema = new Schema<TBook>(
     },
     status: {
       type: String,
-      enum: ["Pending", "Approved", "Done"],
+      enum: ["Pending", "Approved", "Done", "Cancled"],
       default: "Pending",
     },
     totalCost: {

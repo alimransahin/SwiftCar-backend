@@ -69,16 +69,21 @@ const makePayment = async (res: any) => {
 };
 const bookingStatusUpdate = async (res: any) => {
   const bookingId = res.params.id;
-  const status = res.body.data;
-  const result = await Book.findById(bookingId).populate("userId");
+  const status = res.body.status;
+  const result = await Book.findById(bookingId);
   if (!result) {
     throw new AppError(httpStatus.NOT_FOUND, "Booking not found");
   }
   console.log(status);
-  // result.status = "Done";
-  // result.isPaid = true;
-  // await result.save();
-  // return paymentSession;
+  console.log(result);
+  if (status == "approve") {
+    result.status = "Approved";
+  } else {
+    result.status = "Cancled";
+  }
+
+  await result.save();
+  return result;
 };
 
 export const bookService = {

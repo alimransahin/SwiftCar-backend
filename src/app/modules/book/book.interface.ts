@@ -9,7 +9,7 @@ export type TBook = {
   dropOffDate: Date;
   dropOffTime: string;
   totalCost: number;
-  status: "Done" | "Pending" | "Approved";
+  status: "Done" | "Pending" | "Approved"|"Cancled";
   isReturn: boolean;
   isPaid: boolean;
 };
