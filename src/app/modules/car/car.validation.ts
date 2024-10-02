@@ -10,7 +10,8 @@ const createCarValidationSchema = z.object({
   isElectric: z.boolean({ required_error: "isElectric is required" }),
   features: z
     .array(z.string())
-    .min(1, { message: "At least one feature is required" }),
+    .min(1, { message: "At least one feature is required" })
+    .optional(),
   pricePerHour: z
     .number({ required_error: "Price per hour is required" })
     .positive({ message: "Price must be a positive number" }),

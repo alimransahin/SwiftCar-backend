@@ -21,7 +21,7 @@ const carSchema = new Schema<TCar>(
     },
     features: {
       type: [String],
-      required: true,
+
     },
     pricePerHour: {
       type: Number,
